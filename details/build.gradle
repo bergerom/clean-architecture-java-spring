@@ -1,0 +1,8 @@
+plugins {
+    id 'clean-architecture-java-spring.java-conventions'
+}
+
+
+dependencies {
+    implementation project(':core')
+}

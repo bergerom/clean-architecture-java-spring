@@ -1,0 +1,13 @@
+- JOOQ with Flyway !
+- add modules descriptor files
+- add port and adapter for a database connection
+- exceptions handler to convert core exceptions to application exceptions
+- pagination
+- mapping library
+- test a shared lib
+
+
+Requirements for a Java/Kotlin service :
+- 3 packages clean architecture
+- database versioning
+- clean REST API
