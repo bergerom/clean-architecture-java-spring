@@ -1,3 +1,7 @@
+Urgent :
+- See why the UseCaseInteractor Bean is not found
+
+Less Urgent :
 - JOOQ with Flyway !
 - add modules descriptor files
 - add port and adapter for a database connection

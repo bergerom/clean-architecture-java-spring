@@ -1,6 +1,7 @@
 
 import entities.User;
 import org.junit.jupiter.api.Test;
+import repositories.FileDatabase;
 
 import java.io.File;
 import java.io.IOException;
