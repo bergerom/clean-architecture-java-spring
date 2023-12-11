@@ -1,4 +1,4 @@
-package dto;
+package core.dto;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package ports;
+package core.ports;
 
 import java.io.IOException;
 
