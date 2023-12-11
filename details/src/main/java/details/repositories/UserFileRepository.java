@@ -43,7 +43,7 @@ public class UserFileRepository implements UserRepository {
     }
 
 
-    protected static String toComaSeparated(User user) {
+    public static String toComaSeparated(User user) {
         return user.userId()
                 + ","
                 + user.name()

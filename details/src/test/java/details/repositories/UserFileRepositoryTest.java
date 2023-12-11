@@ -1,6 +1,7 @@
 package details.repositories;
 
 import core.entities.User;
+import details.repositories.utils.FileDatabaseTestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -19,10 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.linesOf;
 
 public class UserFileRepositoryTest {
+
+    FileDatabaseTestUtils fileDatabaseTestUtils = new FileDatabaseTestUtils(this.getClass());
+
     @Test
     public void testSaveUser() throws URISyntaxException, IOException {
 
-        File userTable = initializeDatabaseFile("users.csv", Collections.emptyList());
+        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv", Collections.emptyList());
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
         UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase);
 
@@ -45,7 +49,7 @@ public class UserFileRepositoryTest {
         );
 
         // Initalize file database with values
-        File userTable = initializeDatabaseFile("users.csv", users);
+        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv", users);
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
         UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase);
 
@@ -68,7 +72,7 @@ public class UserFileRepositoryTest {
                 new User(UUID.randomUUID(), "Thomas", 30)
         );
 
-        File userTable = initializeDatabaseFile("users.csv", users);
+        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv", users);
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
         UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase);
 
@@ -79,25 +83,5 @@ public class UserFileRepositoryTest {
 
     }
 
-    private File initializeDatabaseFile(String fileName, List<User> users) throws IOException, URISyntaxException {
-        File userTable = getResource(fileName);
 
-        if (userTable.exists()) {
-            Files.delete(userTable.toPath());
-        }
-
-        String fileContent = "";
-        for (User user : users) {
-            fileContent += UserFileRepository.toComaSeparated(user) + "\n";
-        }
-
-        Files.writeString(userTable.toPath(), fileContent, StandardOpenOption.CREATE);
-
-        return userTable;
-    }
-
-    private File getResource(String resourceFileName) throws URISyntaxException {
-        URL res = getClass().getClassLoader().getResource(resourceFileName);
-        return Paths.get(res.toURI()).toFile();
-    }
 }
