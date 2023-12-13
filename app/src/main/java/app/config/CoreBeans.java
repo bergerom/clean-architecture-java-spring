@@ -16,10 +16,7 @@ public class CoreBeans {
 
         // File database access layer
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase("");
-
-        // Repositories
-        UserRepository userRepository = new UserFileRepository(coreFileDatabase);
-        GameScoreRepository gameScoreFileRepository = new GameScoreFileRepository("");
+        GameScoreRepository gameScoreFileRepository = new GameScoreFileRepository(coreFileDatabase);
 
         return new UseCaseInteractor(userRepository, gameScoreFileRepository);
     }

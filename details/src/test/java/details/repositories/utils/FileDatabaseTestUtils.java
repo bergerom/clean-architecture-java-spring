@@ -28,7 +28,7 @@ public class FileDatabaseTestUtils {
 
         String fileContent = "";
         for (User user : users) {
-            fileContent += UserFileRepository.toComaSeparated(user) + "\n";
+            fileContent += UserFileRepository.serialize(user) + "\n";
         }
 
         Files.writeString(userTable.toPath(), fileContent, StandardOpenOption.CREATE);

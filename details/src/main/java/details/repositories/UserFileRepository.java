@@ -11,20 +11,22 @@ import java.util.UUID;
 public class UserFileRepository implements UserRepository {
 
     private final CoreFileDatabase coreFileDatabase;
+    private final EntitySerializer<User> entitySerializer;
 
-    public UserFileRepository(CoreFileDatabase coreFileDatabase) {
+    public UserFileRepository(CoreFileDatabase coreFileDatabase, EntitySerializer<User> entitySerializer) {
         this.coreFileDatabase = coreFileDatabase;
+        this.entitySerializer = entitySerializer;
     }
 
     @Override
     public void saveUser(User user) {
-        coreFileDatabase.addNewLine(FileDatabaseTable.USER_TABLE, toComaSeparated(user));
+        coreFileDatabase.addNewLine(FileDatabaseTable.USER_TABLE, serialize(user));
     }
 
     @Override
     public List<User> getUsers(String nameContains) {
         return coreFileDatabase.readAllLines(FileDatabaseTable.USER_TABLE)
-                .map(UserFileRepository::parseToUser)
+                .map(entitySerializer::unserialize)
                 .filter(user -> user.name().contains(nameContains))
                 .toList();
     }
@@ -32,18 +34,19 @@ public class UserFileRepository implements UserRepository {
     @Override
     public Optional<User> getUser(UUID userId) {
         return coreFileDatabase.readAllLines(FileDatabaseTable.USER_TABLE)
-                .map(UserFileRepository::parseToUser)
+                .map(entitySerializer::unserialize)
                 .filter(user -> user.userId().equals(userId))
                 .findFirst();
     }
 
-    protected static User parseToUser(String line) {
+    // TODO : create a generic class for parse/toComaSeparated, put this class in the constructor of this class
+    protected static User unserialize(String line) {
         String[] values = StringUtils.split(line, ",");
         return new User(UUID.fromString(values[0]), values[1], Integer.parseInt(values[2]));
     }
 
 
-    public static String toComaSeparated(User user) {
+    public static String serialize(User user) {
         return user.userId()
                 + ","
                 + user.name()

@@ -7,10 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,15 +21,16 @@ public class UserFileRepositoryTest {
 
     @Test
     public void testSaveUser() throws URISyntaxException, IOException {
-
-        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv", Collections.emptyList());
+        // Initalize file database with values
+        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv",
+                Collections.emptyList());
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
-        UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase);
+        UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase, new EntitySerializer<User>(User.class));
 
         User user = new User(UUID.randomUUID(), "James", 23);
         userFileRepository.saveUser(user);
 
-        String expectedFileContent = UserFileRepository.toComaSeparated(user);
+        String expectedFileContent = UserFileRepository.serialize(user);
         assertThat(linesOf(userTable).contains(expectedFileContent)).isTrue();
 
     }
@@ -51,7 +48,7 @@ public class UserFileRepositoryTest {
         // Initalize file database with values
         File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv", users);
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
-        UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase);
+        UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase, new EntitySerializer<User>(User.class));
 
         // Retrieve users whose name contains the letter "J"
         List<User> getUsersResponse = userFileRepository.getUsers("J");
@@ -74,12 +71,13 @@ public class UserFileRepositoryTest {
 
         File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv", users);
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
-        UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase);
+        UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase, new EntitySerializer<User>(User.class));
 
         // Retrieve user with the specific UUID
         Optional<User> getUserResponse = userFileRepository.getUser(specificUuid);
 
-        assertThat(getUserResponse.isPresent() && getUserResponse.get().userId().equals(specificUuid));
+        assertThat(getUserResponse.isPresent() && getUserResponse.get().userId().equals(specificUuid))
+                .isTrue();
 
     }
 

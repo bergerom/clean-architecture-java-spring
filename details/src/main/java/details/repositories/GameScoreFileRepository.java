@@ -9,11 +9,11 @@ import java.util.UUID;
 
 public class GameScoreFileRepository implements GameScoreRepository {
 
-    public String databasePath;
+    private final CoreFileDatabase coreFileDatabase;
 
 
-    public GameScoreFileRepository(String databasePath) {
-        this.databasePath = databasePath;
+    public GameScoreFileRepository(CoreFileDatabase coreFileDatabase) {
+        this.coreFileDatabase = coreFileDatabase;
     }
 
     @Override
