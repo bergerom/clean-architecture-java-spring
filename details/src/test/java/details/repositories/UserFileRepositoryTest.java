@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static details.repositories.utils.FileDatabaseTestUtils.serialize;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.linesOf;
 
@@ -30,7 +31,7 @@ public class UserFileRepositoryTest {
         User user = new User(UUID.randomUUID(), "James", 23);
         userFileRepository.saveUser(user);
 
-        String expectedFileContent = UserFileRepository.serialize(user);
+        String expectedFileContent = serialize(user);
         assertThat(linesOf(userTable).contains(expectedFileContent)).isTrue();
 
     }
@@ -39,7 +40,7 @@ public class UserFileRepositoryTest {
     @Test
     public void testGetUsers() throws URISyntaxException, IOException {
         // Users table initial state
-        List<User> users = List.of(
+        List<Record> users = List.of(
                 new User(UUID.randomUUID(), "James", 23),
                 new User(UUID.randomUUID(), "Jerry", 24),
                 new User(UUID.randomUUID(), "Thomas", 30)
@@ -52,7 +53,7 @@ public class UserFileRepositoryTest {
 
         // Retrieve users whose name contains the letter "J"
         List<User> getUsersResponse = userFileRepository.getUsers("J");
-        List<User> expectedUsers = users.stream().filter(u -> u.name().contains("J")).toList();
+        List<Record> expectedUsers = users.stream().filter(u -> ((User)u).name().contains("J")).toList();
 
         assertThat(getUsersResponse.containsAll(expectedUsers)
                 && getUsersResponse.size() == expectedUsers.size()).isTrue();
@@ -63,7 +64,7 @@ public class UserFileRepositoryTest {
     public void testGetUser() throws URISyntaxException, IOException {
         // Users table initial state
         UUID specificUuid = UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3");
-        List<User> users = List.of(
+        List<Record> users = List.of(
                 new User(specificUuid, "James", 23),
                 new User(UUID.randomUUID(), "Jerry", 24),
                 new User(UUID.randomUUID(), "Thomas", 30)

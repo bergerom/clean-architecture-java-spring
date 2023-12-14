@@ -1,11 +1,11 @@
 package details.repositories;
 
 import core.entities.User;
+import details.repositories.builder.GameScoreBuilder;
+import details.repositories.builder.UserBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +20,33 @@ public class EntitySerializer<T> {
         this.objectClass = objectClass;
     }
 
-    public T unserialize(String line) {
+    // TODO : avoid cast warnings here
+    public T parseLine(String line) {
         String[] values = StringUtils.split(line, ",");
-        Constructor<T> constructor = null;
-        try {
-            constructor = objectClass.getConstructor();
-            return constructor.newInstance(UUID.fromString(values[0]), values[1], Integer.parseInt(values[2]));
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
-            throw new RuntimeException(e);
+        if (objectClass.getName().endsWith("User")) {
+            return (T) new UserBuilder().fromArray(values).build();
+        } else if (objectClass.getName().endsWith("GameScore")) {
+            return (T) new GameScoreBuilder().fromArray(values).build();
         }
+        return null;
     }
 
-    public String serialize(T object) {
+    public String toCsvLine(T object) {
 
+        List<Field> fields = getFieldsFromRecord();
+
+        return fields.stream().map(f -> {
+            try {
+                return f.get(object).toString();
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.joining(","));
+    }
+
+    private List<Field> getFieldsFromRecord() {
         List<Field> fields = new ArrayList<>();
+
         RecordComponent[] components = objectClass.getRecordComponents();
         for (var comp : components) {
             try {
@@ -47,12 +59,6 @@ public class EntitySerializer<T> {
             }
         }
 
-        return fields.stream().map(f -> {
-            try {
-                return f.get(object).toString();
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.joining(","));
+        return fields;
     }
 }

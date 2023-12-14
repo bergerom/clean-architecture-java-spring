@@ -1,7 +1,7 @@
 package details.repositories.utils;
 
+import core.entities.GameScore;
 import core.entities.User;
-import details.repositories.UserFileRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,25 +19,47 @@ public class FileDatabaseTestUtils {
         this.callingClass = callingClass;
     }
 
-    public File initializeDatabaseFile(String fileName, List<User> users) throws IOException, URISyntaxException {
-        File userTable = getResource(fileName);
+    public File initializeDatabaseFile(String fileName, List<Record> records) throws IOException, URISyntaxException {
+        // TODO : do not rely on resources
+        File table = getResource(fileName);
 
-        if (userTable.exists()) {
-            Files.delete(userTable.toPath());
+        if (table.exists()) {
+            Files.delete(table.toPath());
         }
 
         String fileContent = "";
-        for (User user : users) {
-            fileContent += UserFileRepository.serialize(user) + "\n";
+        for (Record record : records) {
+            fileContent += serialize(record) + "\n";
         }
 
-        Files.writeString(userTable.toPath(), fileContent, StandardOpenOption.CREATE);
+        Files.writeString(table.toPath(), fileContent, StandardOpenOption.CREATE);
 
-        return userTable;
+        return table;
     }
 
     public File getResource(String resourceFileName) throws URISyntaxException {
         URL res = this.callingClass.getClassLoader().getResource(resourceFileName);
         return Paths.get(res.toURI()).toFile();
+    }
+
+    public static String serialize(Record obj) {
+        if (obj instanceof User) {
+            User user = (User) obj;
+            return user.userId()
+                    + ","
+                    + user.name()
+                    + ","
+                    + user.age();
+        } else if (obj instanceof GameScore) {
+            GameScore gameScore = (GameScore) obj;
+            return String.join(",",
+                    gameScore.gameScoreId().toString(),
+                    gameScore.gameSessionId().toString(),
+                    gameScore.userId().toString(),
+                    gameScore.score().toString(),
+                    gameScore.date().toString());
+        }
+
+        return "";
     }
 }

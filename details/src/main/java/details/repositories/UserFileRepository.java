@@ -20,13 +20,13 @@ public class UserFileRepository implements UserRepository {
 
     @Override
     public void saveUser(User user) {
-        coreFileDatabase.addNewLine(FileDatabaseTable.USER_TABLE, serialize(user));
+        coreFileDatabase.addNewLine(FileDatabaseTable.USER_TABLE, entitySerializer.toCsvLine(user));
     }
 
     @Override
     public List<User> getUsers(String nameContains) {
         return coreFileDatabase.readAllLines(FileDatabaseTable.USER_TABLE)
-                .map(entitySerializer::unserialize)
+                .map(entitySerializer::parseLine)
                 .filter(user -> user.name().contains(nameContains))
                 .toList();
     }
@@ -34,7 +34,7 @@ public class UserFileRepository implements UserRepository {
     @Override
     public Optional<User> getUser(UUID userId) {
         return coreFileDatabase.readAllLines(FileDatabaseTable.USER_TABLE)
-                .map(entitySerializer::unserialize)
+                .map(entitySerializer::parseLine)
                 .filter(user -> user.userId().equals(userId))
                 .findFirst();
     }
@@ -46,11 +46,5 @@ public class UserFileRepository implements UserRepository {
     }
 
 
-    public static String serialize(User user) {
-        return user.userId()
-                + ","
-                + user.name()
-                + ","
-                + user.age();
-    }
+
 }
