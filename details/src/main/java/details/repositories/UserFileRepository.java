@@ -1,8 +1,7 @@
 package details.repositories;
 
 import core.entities.User;
-import core.ports.UserRepository;
-import org.apache.commons.lang3.StringUtils;
+import core.ports.driven.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,13 +37,4 @@ public class UserFileRepository implements UserRepository {
                 .filter(user -> user.userId().equals(userId))
                 .findFirst();
     }
-
-    // TODO : create a generic class for parse/toComaSeparated, put this class in the constructor of this class
-    protected static User unserialize(String line) {
-        String[] values = StringUtils.split(line, ",");
-        return new User(UUID.fromString(values[0]), values[1], Integer.parseInt(values[2]));
-    }
-
-
-
 }

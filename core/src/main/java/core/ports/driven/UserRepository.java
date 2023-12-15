@@ -1,4 +1,4 @@
-package core.ports;
+package core.ports.driven;
 
 
 import core.entities.User;

@@ -1,6 +1,6 @@
 Urgent :
 - See why the UseCaseInteractor Bean is not found
-
+- Add DTO classes to the modules files, along with Driving Ports. The other classes should not be exposed.
 Less Urgent :
 - JOOQ with Flyway !
 - add modules descriptor files

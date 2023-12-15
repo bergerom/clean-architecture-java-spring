@@ -1,7 +1,7 @@
 package details.repositories.mocking;
 
 import core.entities.User;
-import core.ports.UserRepository;
+import core.ports.driven.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
