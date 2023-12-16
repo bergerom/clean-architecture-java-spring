@@ -14,11 +14,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping
-public class SpringAPI {
+public class ClientAPI {
 
     private final UseCaseInteractor useCaseInteractor;
 
-    public SpringAPI(UseCaseInteractor useCaseInteractor) {
+    public ClientAPI(UseCaseInteractor useCaseInteractor) {
         this.useCaseInteractor = useCaseInteractor;
     }
 

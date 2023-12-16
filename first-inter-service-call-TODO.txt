@@ -1,0 +1,6 @@
+1 - Create a new API SecureAPI  ==> this API should accept keycloak tokens
+2 - Create a new endpoint on this API, accepting GameScore(UUID gameScoreId, UUID gameSessionId, Integer score, Instant date)
+    + TOKEN ! https://www.baeldung.com/spring-keycloak-get-user-id
+3 - Mock token retrieval functions for now
+4 - Embed Keycloak in Spring Boot App : https://www.baeldung.com/keycloak-embedded-in-spring-boot-app
+5 - Edit Minesweeper project to call this service with GameScore + Token

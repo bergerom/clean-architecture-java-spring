@@ -4,6 +4,7 @@ import core.entities.GameScore;
 import core.entities.User;
 import core.export.dto.TotalScoreDTO;
 import core.export.mappers.UserDTOMapper;
+import core.ports.driving.AddScore;
 import core.ports.driving.CreateUser;
 import core.ports.driven.GameScoreRepository;
 import core.ports.driving.GlobalScoreBoard;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoard {
+public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoard, AddScore {
 
     private final UserRepository userRepository;
     private final GameScoreRepository gameScoreRepository;
@@ -63,5 +64,18 @@ public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoar
                 )).collect(Collectors.toList());
 
         return new GlobalScoreBoardResponse(totalScores);
+    }
+
+    @Override
+    public void addScoreForUser(AddScore.AddScoreRequest addScoreRequest) {
+        UUID gameScoreId = UUID.randomUUID();
+
+        GameScore score = new GameScore(gameScoreId,
+                addScoreRequest.gameSessionId(),
+                addScoreRequest.userId(),
+                addScoreRequest.score(),
+                addScoreRequest.date());
+
+        gameScoreRepository.addScore(score);
     }
 }

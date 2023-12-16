@@ -1,5 +1,8 @@
 package app.config;
 
+import app.security.DefaultUserToken;
+import app.security.UserToken;
+import core.entities.GameScore;
 import core.entities.User;
 import core.ports.driven.GameScoreRepository;
 import core.ports.driven.UserRepository;
@@ -20,12 +23,19 @@ public class CoreBeans {
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase("");
 
         // Game Score Driven port implementation
-        GameScoreRepository gameScoreFileRepository = new GameScoreFileRepository(coreFileDatabase);
+        EntitySerializer<GameScore> gameScoreEntitySerializer = new EntitySerializer<>(GameScore.class);
+        GameScoreRepository gameScoreFileRepository =
+                new GameScoreFileRepository(coreFileDatabase, gameScoreEntitySerializer);
 
         // User Driven port implementation
-        EntitySerializer<User> entitySerializer = new EntitySerializer<>(User.class);
-        UserRepository userRepository = new UserFileRepository(coreFileDatabase, entitySerializer);
+        EntitySerializer<User> userEntitySerializer = new EntitySerializer<>(User.class);
+        UserRepository userRepository = new UserFileRepository(coreFileDatabase, userEntitySerializer);
 
         return new UseCaseInteractor(userRepository, gameScoreFileRepository);
+    }
+
+    @Bean
+    public UserToken getUserToken() {
+        return new DefaultUserToken();
     }
 }

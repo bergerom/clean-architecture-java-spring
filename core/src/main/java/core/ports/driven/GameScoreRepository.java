@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface GameScoreRepository {
     Map<UUID, List<GameScore>> getScoresForUser(List<User> users);
+
+    void addScore(GameScore score);
 }
