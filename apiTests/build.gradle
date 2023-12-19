@@ -1,0 +1,34 @@
+plugins {
+    id 'clean-architecture-java-spring.java-conventions'
+    id 'org.springframework.boot' version "3.2.0"
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+    implementation project(":core") // TODO : use modules.. only export module should be imported here !
+    implementation project(":app")
+    // TODO : find a way to group dependencies and avoid duplication
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+}
+
+bootJar {
+    enabled = false
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    maxHeapSize = '1G'
+
+    testLogging {
+        events "passed"
+    }
+}

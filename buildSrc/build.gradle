@@ -1,3 +1,13 @@
+// TODO : add spotbugs https://docs.gradle.org/current/samples/sample_convention_plugins.html
 plugins {
     id 'groovy-gradle-plugin'
 }
+
+//dependencies {
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
+//    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // support newer java date api
+//}
+//
+//repositories {
+//    mavenCentral()
+//}

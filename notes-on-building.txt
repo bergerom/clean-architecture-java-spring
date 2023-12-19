@@ -1,0 +1,11 @@
+Read this before anything :
+- https://docs.gradle.org/current/userguide/declaring_dependencies_between_subprojects.html
+- https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/
+
+- buildSrc is the first project built
+
+
+Dependencies :
+core
+details <- core
+app <- details <- core

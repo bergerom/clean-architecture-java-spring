@@ -1,19 +1,13 @@
 package app.controllers;
 
 import app.containers.AddScoreContainer;
-import app.containers.CreateUserContainer;
 import app.security.UserToken;
-import core.entities.User;
-import core.export.dto.TotalScoreDTO;
 import core.ports.driving.AddScore;
-import core.ports.driving.CreateUser;
-import core.ports.driving.GlobalScoreBoard;
-import core.ports.driving.ListUsers;
 import core.usecases.UseCaseInteractor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -28,7 +22,8 @@ public class SecureAPI {
         this.userToken = userToken;
     }
 
-    @PostMapping("/secure/scores")
+    @PostMapping("/secure/score")
+    @ResponseStatus(HttpStatus.CREATED)
     public void addScoreForUser(@RequestBody AddScoreContainer score) {
         UUID userId = userToken.getUserId();
         AddScore.AddScoreRequest addScoreRequest = new AddScore.AddScoreRequest(

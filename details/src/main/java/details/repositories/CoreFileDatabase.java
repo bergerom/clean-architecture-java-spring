@@ -39,7 +39,7 @@ public class CoreFileDatabase {
             }
 
             Files.writeString(fullFilePath,
-                    line,
+                    line + "\n",
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
