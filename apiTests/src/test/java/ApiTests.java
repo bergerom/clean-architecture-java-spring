@@ -37,8 +37,6 @@ public class ApiTests {
         postScore(score);
 
         TotalScoreDTO[] scores = getScores();
-
-        int tto = 3;
     }
 
     private AddScoreContainer createScore(UUID uuid, Integer score, Instant date) {
