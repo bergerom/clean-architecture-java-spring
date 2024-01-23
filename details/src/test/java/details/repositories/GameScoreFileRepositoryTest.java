@@ -22,7 +22,7 @@ class GameScoreFileRepositoryTest {
     private final FileDatabaseTestUtils fileDatabaseTestUtils = new FileDatabaseTestUtils(this.getClass());
 
     @Test
-    public void testGetGlobalScoreboard() throws IOException, URISyntaxException {
+    public void testGetGlobalScoreboard() throws Exception {
         UUID gameScoreId = UUID.randomUUID();
         User userOne = new User(UUID.randomUUID(), "henry", 24);
         User userTwo = new User(UUID.randomUUID(), "sarah", 26);
@@ -48,9 +48,12 @@ class GameScoreFileRepositoryTest {
     }
 
     @Test
-    public void testAddScore() throws IOException, URISyntaxException {
-        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("score.csv", Collections.emptyList());
-        CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
+    public void testAddScore() throws Exception {
+
+        String csvTableName = FileDatabaseTable.SCORE_TABLE.toString();
+
+        File scoreTable = fileDatabaseTestUtils.initializeDatabaseFile(csvTableName, Collections.emptyList());
+        CoreFileDatabase coreFileDatabase = new CoreFileDatabase(scoreTable.getParent());
         EntitySerializer<GameScore> gameScoreEntitySerializer = new EntitySerializer<>(GameScore.class);
         GameScoreFileRepository gameScoreFileRepository
                 = new GameScoreFileRepository(coreFileDatabase, gameScoreEntitySerializer);

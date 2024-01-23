@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Optional;
 
 public class FileDatabaseTestUtils {
     private final Class<?> callingClass;
@@ -19,8 +20,8 @@ public class FileDatabaseTestUtils {
         this.callingClass = callingClass;
     }
 
-    public File initializeDatabaseFile(String fileName, List<Record> records) throws IOException, URISyntaxException {
-        // TODO : do not rely on resources
+    // TODO : more specific exceptions
+    public File initializeDatabaseFile(String fileName, List<Record> records) throws Exception {
         File table = getResource(fileName);
 
         if (table.exists()) {
@@ -37,8 +38,14 @@ public class FileDatabaseTestUtils {
         return table;
     }
 
-    public File getResource(String resourceFileName) throws URISyntaxException {
+    public File getResource(String resourceFileName) throws Exception {
         URL res = this.callingClass.getClassLoader().getResource(resourceFileName);
+
+        if (res == null) {
+            String errorMsg = String.format("Resource with name %s does not exists", resourceFileName);
+            throw new Exception(errorMsg);
+        }
+
         return Paths.get(res.toURI()).toFile();
     }
 

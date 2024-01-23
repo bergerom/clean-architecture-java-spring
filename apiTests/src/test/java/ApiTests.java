@@ -4,14 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.export.dto.TotalScoreDTO;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
+import java.time.temporal.ChronoUnit;
 
 import static io.restassured.RestAssured.given;
-
+@Deprecated()
 public class ApiTests {
 
     CleanArchitectureJavaSpringApplication app = new CleanArchitectureJavaSpringApplication();
@@ -65,5 +68,20 @@ public class ApiTests {
                 .body()
                 .as(TotalScoreDTO[].class);
 
+    }
+
+    private String createJwtToken() {
+        Instant now = Instant.now();
+
+        String jwtToken = Jwts.builder()
+                .claim("name", "Jane Doe")
+                .claim("email", "jane@example.com")
+                .setSubject("jane")
+                .setId(UUID.randomUUID().toString())
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plus(1, ChronoUnit.DAYS)))
+                .compact();
+
+        return null;
     }
 }

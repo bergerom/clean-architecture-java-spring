@@ -21,9 +21,12 @@ public class UserFileRepositoryTest {
     FileDatabaseTestUtils fileDatabaseTestUtils = new FileDatabaseTestUtils(this.getClass());
 
     @Test
-    public void testSaveUser() throws URISyntaxException, IOException {
+    public void testSaveUser() throws Exception {
+
+        String csvTableName = FileDatabaseTable.USER_TABLE.toString();
+
         // Initalize file database with values
-        File userTable = fileDatabaseTestUtils.initializeDatabaseFile("users.csv",
+        File userTable = fileDatabaseTestUtils.initializeDatabaseFile(csvTableName,
                 Collections.emptyList());
         CoreFileDatabase coreFileDatabase = new CoreFileDatabase(userTable.getParent());
         UserFileRepository userFileRepository = new UserFileRepository(coreFileDatabase, new EntitySerializer<User>(User.class));
@@ -38,7 +41,7 @@ public class UserFileRepositoryTest {
 
 
     @Test
-    public void testGetUsers() throws URISyntaxException, IOException {
+    public void testGetUsers() throws Exception {
         // Users table initial state
         List<Record> users = List.of(
                 new User(UUID.randomUUID(), "James", 23),
@@ -53,7 +56,7 @@ public class UserFileRepositoryTest {
 
         // Retrieve users whose name contains the letter "J"
         List<User> getUsersResponse = userFileRepository.getUsers("J");
-        List<Record> expectedUsers = users.stream().filter(u -> ((User)u).name().contains("J")).toList();
+        List<Record> expectedUsers = users.stream().filter(u -> ((User) u).name().contains("J")).toList();
 
         assertThat(getUsersResponse.containsAll(expectedUsers)
                 && getUsersResponse.size() == expectedUsers.size()).isTrue();
@@ -61,7 +64,7 @@ public class UserFileRepositoryTest {
     }
 
     @Test
-    public void testGetUser() throws URISyntaxException, IOException {
+    public void testGetUser() throws Exception {
         // Users table initial state
         UUID specificUuid = UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3");
         List<Record> users = List.of(

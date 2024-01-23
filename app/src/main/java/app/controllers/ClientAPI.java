@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.containers.CreateUserContainer;
+import app.controllers.DTO.CreateUserDTO;
 import core.entities.User;
 import core.export.dto.TotalScoreDTO;
 import core.ports.driving.CreateUser;
@@ -23,10 +24,13 @@ public class ClientAPI {
     }
 
     @PostMapping("/users")
-    public String createUser(@RequestBody CreateUserContainer createUser) {
+    public CreateUserDTO createUser(@RequestBody CreateUserContainer createUser) {
         CreateUser.CreateUserRequest createUserRequest
                 = new CreateUser.CreateUserRequest(createUser.userName(), createUser.age());
-        return useCaseInteractor.createUser(createUserRequest).id();
+
+        String userId =  useCaseInteractor.createUser(createUserRequest).id();
+
+        return new CreateUserDTO(userId);
     }
 
     @GetMapping("/users")

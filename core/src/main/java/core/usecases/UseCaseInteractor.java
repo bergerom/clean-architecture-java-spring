@@ -1,32 +1,34 @@
 package core.usecases;
 
 import core.entities.GameScore;
+import core.entities.GameSession;
 import core.entities.User;
 import core.export.dto.TotalScoreDTO;
 import core.export.mappers.UserDTOMapper;
-import core.ports.driving.AddScore;
-import core.ports.driving.CreateUser;
+import core.ports.driven.GameSessionRepository;
+import core.ports.driving.*;
 import core.ports.driven.GameScoreRepository;
-import core.ports.driving.GlobalScoreBoard;
-import core.ports.driving.ListUsers;
 import core.ports.driven.UserRepository;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoard, AddScore {
+public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoard, AddScore, CreateGameSession {
 
     private final UserRepository userRepository;
     private final GameScoreRepository gameScoreRepository;
+    private final GameSessionRepository gameSessionRepository;
     private final UserDTOMapper mapper;
 
 
-    public UseCaseInteractor(UserRepository userRepository, GameScoreRepository gameScoreRepository) {
+    public UseCaseInteractor(UserRepository userRepository,
+                             GameScoreRepository gameScoreRepository,
+                             GameSessionRepository gameSessionRepository) {
         this.userRepository = userRepository;
         this.gameScoreRepository = gameScoreRepository;
+        this.gameSessionRepository = gameSessionRepository;
         this.mapper = Mappers.getMapper(UserDTOMapper.class);
     }
 
@@ -55,13 +57,17 @@ public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoar
         List<User> users = userRepository.getUsers("");
         Map<UUID, List<GameScore>> uuidTotalScores = gameScoreRepository.getScoresForUser(users);
 
-        List<TotalScoreDTO> totalScores = users.stream().map(user ->
-                new TotalScoreDTO(
-                        mapper.entityToDTO(user),
-                        uuidTotalScores.get(user.userId())
-                                .stream()
-                                .mapToInt(GameScore::score).sum()
-                )).collect(Collectors.toList());
+        List<TotalScoreDTO> totalScores = users.stream().map(user -> {
+            //    System.out.println(uuidTotalScores);
+            return new TotalScoreDTO(
+                    mapper.entityToDTO(user),
+                    uuidTotalScores.containsKey(user.userId()) ?
+                            uuidTotalScores.get(user.userId())
+                                    .stream()
+                                    .mapToInt(GameScore::score).sum()
+                            :
+                            0);
+        }).toList();
 
         return new GlobalScoreBoardResponse(totalScores);
     }
@@ -77,5 +83,17 @@ public class UseCaseInteractor implements CreateUser, ListUsers, GlobalScoreBoar
                 addScoreRequest.date());
 
         gameScoreRepository.addScore(score);
+    }
+
+    @Override
+    public UUID createGameSession(CreateGameSessionRequest createGameSessionRequest) {
+        UUID gameSessionId = UUID.randomUUID();
+        UUID userId = createGameSessionRequest.userId();
+
+        GameSession session = new GameSession(gameSessionId, userId);
+
+        gameSessionRepository.addGameSession(session);
+
+        return gameSessionId;
     }
 }
