@@ -9,7 +9,11 @@ import core.ports.driven.GameScoreRepository;
 import core.ports.driven.GameSessionRepository;
 import core.ports.driven.UserRepository;
 import core.usecases.UseCaseInteractor;
-import details.repositories.*;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
+import details.repositories.filerepository.tables.GameScoreFileRepository;
+import details.repositories.filerepository.tables.GameSessionFileRepository;
+import details.repositories.filerepository.tables.UserFileRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

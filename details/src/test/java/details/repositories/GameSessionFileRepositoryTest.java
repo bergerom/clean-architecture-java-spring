@@ -1,6 +1,10 @@
 package details.repositories;
 
 import core.entities.GameSession;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
+import details.repositories.filerepository.tables.FileDatabaseTable;
+import details.repositories.filerepository.tables.GameSessionFileRepository;
 import details.repositories.utils.FileDatabaseTestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,10 @@
-package details.repositories;
+package details.repositories.filerepository.tables;
 
 import core.entities.GameScore;
 import core.entities.User;
 import core.ports.driven.GameScoreRepository;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
 import details.repositories.builder.GameScoreBuilder;
 
 import java.util.List;

@@ -10,7 +10,7 @@ future will be protected by Oauth2 and Keycloak.
 
 
 Following the  [ports and adapter architecture](https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/), we have three repositories :
-- **core** (or domain) for the domain code. Independant of frameworks, databases, etc.
+- **core** (or domain) for the domain code. Independent of frameworks, databases, etc.
 - **details** (or infrastructure), for the implementation of driven ports (mainly data storage)
 - **app**, for the framework (spring boot here) 
 
@@ -21,3 +21,19 @@ The following additions have been made :
 - Code in java instead of kotlin
 - Use of gradle modules
 - Use of Java records
+
+## Some notes on the architecture
+Driving ports (inbound ports) = what the application offers to the outside world    
+Driven ports (outbound ports) = what the application needs from the outside world 
+
+
+## Building the app, executing tests , useful gradle commands
+
+The buildSrc project is used to share common gradle configuration across modules. 
+It can also be used to share common dependencies versions.  
+To build the whole project :
+`./gradlew clean build --refresh-dependencies --stacktrace` 
+To build only the core module : 
+`./gradlew :core:clean :core:build --refresh-dependencies --stacktrace`
+To get all the dependencies tree for the details module : 
+` ./gradlew details:dependencies --configuration testRuntimeClasspath`

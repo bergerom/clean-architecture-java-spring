@@ -1,6 +1,6 @@
 plugins {
     id 'clean-architecture-java-spring.java-conventions'
-    id 'org.springframework.boot' version "3.2.0"
+    id 'org.springframework.boot' version "4.0.1"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -10,7 +10,6 @@ dependencies {
     implementation project(":app")
     // TODO : find a way to group dependencies and avoid duplication
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'io.rest-assured:rest-assured:5.4.0'
@@ -29,6 +28,8 @@ bootJar {
 }
 
 test {
+    useJUnitPlatform()
+
     systemProperty "karate.options", System.properties.getProperty("karate.options")
     systemProperty "karate.env", System.properties.getProperty("karate.env")
     outputs.upToDateWhen { false }
@@ -39,7 +40,7 @@ test {
         events "passed"
     }
 }
-// Necessary because Karate puts featues files in src/test/java instead of resources folder
+// Necessary because Karate puts features files in src/test/java instead of resources folder
 sourceSets {
     test {
         resources {

@@ -1,12 +1,14 @@
 package details.repositories;
 
 import core.entities.User;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
+import details.repositories.filerepository.tables.FileDatabaseTable;
+import details.repositories.filerepository.tables.UserFileRepository;
 import details.repositories.utils.FileDatabaseTestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

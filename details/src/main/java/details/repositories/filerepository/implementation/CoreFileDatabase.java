@@ -1,4 +1,6 @@
-package details.repositories;
+package details.repositories.filerepository.implementation;
+
+import details.repositories.filerepository.tables.FileDatabaseTable;
 
 import java.io.IOException;
 import java.nio.file.Files;

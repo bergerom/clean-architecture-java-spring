@@ -7,5 +7,4 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UserDTOMapper {
     UserDTO entityToDTO(User user);
-
 }

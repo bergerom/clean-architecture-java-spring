@@ -1,4 +1,4 @@
-package details.repositories;
+package details.repositories.filerepository.tables;
 
 public enum FileDatabaseTable {
 

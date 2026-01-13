@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Implementations of these methods should launch the framework on the port
+ * Implementations of these methods should launch the framework on the port 9090
  * defined inside the test/java/karate-config.js
  * <p>
  * For now, only spring boot is implemented (as default here).

@@ -1,6 +1,5 @@
-package details.repositories;
+package details.repositories.filerepository.implementation;
 
-import core.entities.User;
 import details.repositories.builder.GameScoreBuilder;
 import details.repositories.builder.UserBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +18,7 @@ public class EntitySerializer<T> {
         this.objectClass = objectClass;
     }
 
-    // TODO : avoid cast warnings here
+    @SuppressWarnings("unchecked")
     public T parseLine(String line) {
         String[] values = StringUtils.split(line, ",");
         if (objectClass.getName().endsWith("User")) {

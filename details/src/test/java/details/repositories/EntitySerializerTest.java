@@ -2,6 +2,7 @@ package details.repositories;
 
 import core.entities.GameScore;
 import core.entities.User;
+import details.repositories.filerepository.implementation.EntitySerializer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

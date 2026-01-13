@@ -2,18 +2,7 @@ plugins {
     id 'clean-architecture-java-spring.java-conventions'
 }
 
-
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
     implementation project(':core')
-}
-
-tasks.named('test', Test) {
-    useJUnitPlatform()
-
-    maxHeapSize = '1G'
-
-    testLogging {
-        events "passed"
-    }
 }

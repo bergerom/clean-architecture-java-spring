@@ -1,17 +1,9 @@
-package details.repositories;
+package details.repositories.filerepository.tables;
 
-import core.entities.GameScore;
 import core.entities.GameSession;
-import core.entities.User;
-import core.ports.driven.GameScoreRepository;
 import core.ports.driven.GameSessionRepository;
-import details.repositories.builder.GameScoreBuilder;
-
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
 
 
 public class GameSessionFileRepository implements GameSessionRepository {

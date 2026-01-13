@@ -2,19 +2,20 @@ package details.repositories;
 
 import core.entities.GameScore;
 import core.entities.User;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
+import details.repositories.filerepository.tables.FileDatabaseTable;
+import details.repositories.filerepository.tables.GameScoreFileRepository;
 import details.repositories.utils.FileDatabaseTestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 class GameScoreFileRepositoryTest {
 
@@ -22,7 +23,7 @@ class GameScoreFileRepositoryTest {
     private final FileDatabaseTestUtils fileDatabaseTestUtils = new FileDatabaseTestUtils(this.getClass());
 
     @Test
-    public void testGetGlobalScoreboard() throws Exception {
+    void testGetGlobalScoreboard() throws Exception {
         UUID gameScoreId = UUID.randomUUID();
         User userOne = new User(UUID.randomUUID(), "henry", 24);
         User userTwo = new User(UUID.randomUUID(), "sarah", 26);
@@ -48,7 +49,7 @@ class GameScoreFileRepositoryTest {
     }
 
     @Test
-    public void testAddScore() throws Exception {
+    void testAddScore() throws Exception {
 
         String csvTableName = FileDatabaseTable.SCORE_TABLE.toString();
 

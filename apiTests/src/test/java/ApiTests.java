@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 
 import static io.restassured.RestAssured.given;
 @Deprecated()
-public class ApiTests {
+class ApiTests {
 
     CleanArchitectureJavaSpringApplication app = new CleanArchitectureJavaSpringApplication();
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -30,7 +30,7 @@ public class ApiTests {
     //        3 - create token for this user and send it in the subsequent request
     //        4 - verify score for this user is 15 + 5 = 20
     @Test
-    public void getScoreBoardWithTwoScores() throws JsonProcessingException {
+    void getScoreBoardWithTwoScores() throws JsonProcessingException {
         UUID gameSessionUUID = UUID.randomUUID();
 
         AddScoreContainer score = createScore(gameSessionUUID, 15, Instant.now());

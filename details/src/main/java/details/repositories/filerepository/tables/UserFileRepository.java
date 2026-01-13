@@ -1,7 +1,9 @@
-package details.repositories;
+package details.repositories.filerepository.tables;
 
 import core.entities.User;
 import core.ports.driven.UserRepository;
+import details.repositories.filerepository.implementation.CoreFileDatabase;
+import details.repositories.filerepository.implementation.EntitySerializer;
 
 import java.util.List;
 import java.util.Optional;
