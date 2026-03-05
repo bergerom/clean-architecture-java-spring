@@ -1,2 +1,5 @@
-rootProject.name = 'clean-architecture-java-spring'
-include 'app', 'core', 'details', 'apiTests'
+// Top-level settings.gradle to make the nested Gradle build visible to IDEs
+// This uses a composite build to include the existing 'clean-archi' multi-project build.
+rootProject.name = 'clean-architecture-repo-root'
+includeBuild('clean-archi')
+

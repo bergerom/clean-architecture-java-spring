@@ -1,0 +1,21 @@
+{
+  "realm": "my-realm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "bff-client",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "bff-secret",
+      "redirectUris": [
+        "http://localhost:8080/login/oauth2/code/keycloak",
+        "http://spring-app:8080/login/oauth2/code/keycloak"
+      ],
+      "webOrigins": [
+        "http://localhost:8080",
+        "http://spring-app:8080"
+      ],
+      "standardFlowEnabled": true
+    }
+  ]
+}

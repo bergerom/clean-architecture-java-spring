@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: clean-archi-app-docker
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak-my-realm:
+            # Use the keycloak service name from docker-compose so discovery returns the same issuer
+            issuer-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI:http://keycloak:8080/realms/my-realm}
+        registration:
+          keycloak:
+            provider: keycloak-my-realm
+            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_ID:bff-client}
+            # allow secret override from env (set in docker-compose)
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:bff-secret}
+            client-name: Testapp
+            authorization-grant-type: authorization_code
+            # Redirect to the spring-app service inside the docker network
+            redirect-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_REDIRECT_URI:http://spring-app:8080/login/oauth2/code/keycloak}
+            scope: openid,profile,email,offline_access
+
+server:
+  # Run on the same port the docker-compose maps (keep 8080)
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# Activate this file by setting SPRING_PROFILES_ACTIVE=docker (already set in docker-compose.yml)
+# Notes:
+# - This file assumes the docker-compose service for Keycloak is reachable at http://keycloak:8080
+# - Keep secrets in environment variables (KEYCLOAK_CLIENT_SECRET) or Docker secrets for production
+# - If you mount an external /config/application.yml into the container, remember external config has
+#   higher precedence than classpath resources. You can mount this file too if you prefer host edits
+#   to take effect without rebuilding the image: e.g. - ./app/src/main/resources/application-docker.yml:/config/application-docker.yml
+

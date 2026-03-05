@@ -1,0 +1,46 @@
+meta {
+  name: 5. Access Secure Endpoint with Token
+  type: http
+  seq: 5
+}
+
+note {
+  Now we have the access token, we can access protected resources
+  The token is sent in the Authorization header with Bearer scheme
+
+  In a browser flow, the token would be stored in an HTTP-only session cookie
+  or in-memory storage (not accessible to JavaScript for security)
+}
+
+post {
+  url: {{bff_url}}/secure/score
+  auth: bearer {
+    token: {{access_token}}
+  }
+  body: json {
+    {
+      "gameSessionId": "550e8400-e29b-41d4-a716-446655440000",
+      "score": 100,
+      "date": "2026-03-05T10:00:00Z"
+    }
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    console.log('✓ Score successfully posted with authentication');
+  } else if (res.status === 401) {
+    console.log('✗ Token expired or invalid');
+  }
+}
+
+tests {
+  test("Should accept request with valid token", function() {
+    expect(res.status).to.be.oneOf([200, 201]);
+  });
+
+  test("Should have Authorization header with Bearer token", function() {
+    expect(req.getHeader('Authorization')).to.include('Bearer');
+  });
+}
+

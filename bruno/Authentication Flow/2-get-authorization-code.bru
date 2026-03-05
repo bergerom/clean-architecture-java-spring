@@ -1,0 +1,36 @@
+meta {
+  name: 2. Get Authorization Code (Keycloak Login)
+  type: http
+  seq: 2
+}
+
+note {
+  Step 1: Navigate to Keycloak authorization endpoint
+  This would normally show a login form in the browser
+  In this simulation, we're making a direct request to demonstrate the flow
+
+  In a real scenario:
+  - User sees the Keycloak login page
+  - User enters credentials
+  - User completes MFA if enabled
+  - Keycloak authenticates the user
+}
+
+get {
+  url: {{keycloak_url}}/realms/{{keycloak_realm}}/protocol/openid-connect/auth
+  params:
+    client_id: {{client_id}}
+    response_type: code
+    redirect_uri: {{redirect_uri}}
+    state: {{state}}
+    scope: openid profile email offline_access
+}
+
+tests {
+  test("Should show login page or redirect", function() {
+    // In real flow, this would return HTML with login form
+    // Status could be 200 (form) or 302 (if already logged in)
+    expect([200, 302]).to.include(res.status);
+  });
+}
+

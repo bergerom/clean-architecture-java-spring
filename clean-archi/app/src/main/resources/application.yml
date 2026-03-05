@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: clean-archi-app
+
+app:
+  security:
+    oauth2:
+      enabled: ${OAUTH2_ENABLED:false}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+server:
+  port: 8081
+
+logging:
+  level:
+    root: DEBUG

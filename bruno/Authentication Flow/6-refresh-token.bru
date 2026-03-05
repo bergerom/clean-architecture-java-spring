@@ -1,0 +1,44 @@
+meta {
+  name: 6. Refresh Access Token (When Expired)
+  type: http
+  seq: 6
+}
+
+note {
+  When the access token expires, you can use the refresh token to get a new one
+  Refresh tokens are longer-lived than access tokens
+
+  This happens transparently in a browser - the BFF handles it server-side
+  In Bruno, we're simulating this manually
+}
+
+post {
+  url: {{keycloak_url}}/realms/{{keycloak_realm}}/protocol/openid-connect/token
+  body: formUrlEncoded {
+    grant_type: refresh_token
+    refresh_token: {{refresh_token}}
+    client_id: {{client_id}}
+    client_secret: {{client_secret}}
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    const body = res.getBody();
+    bru.setVar('access_token', body.access_token);
+    console.log('✓ Got new access token from refresh token');
+    console.log('✓ New token expires in:', body.expires_in, 'seconds');
+  }
+}
+
+tests {
+  test("Should return new access token", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property('access_token');
+  });
+
+  test("Refresh token should remain valid", function() {
+    expect(res.body).to.have.property('refresh_token');
+  });
+}
+

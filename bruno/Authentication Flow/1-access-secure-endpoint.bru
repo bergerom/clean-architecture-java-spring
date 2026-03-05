@@ -1,0 +1,42 @@
+meta {
+  name: 1. Access Secure Endpoint (Redirect to Keycloak)
+  type: http
+  seq: 1
+}
+
+note {
+  User tries to access a protected resource under /secure/*
+  The BFF should redirect to Keycloak login page
+}
+
+post {
+  url: {{bff_url}}/secure/score
+  body: json {
+    {
+      "gameSessionId": "550e8400-e29b-41d4-a716-446655440000",
+      "score": 100,
+      "date": "2026-03-05T10:00:00Z"
+    }
+  }
+}
+
+script:post-response {
+  // Extract location header for the redirect
+  const location = res.getHeader('location');
+  console.log('Redirect Location:', location);
+  bru.setVar('redirect_location', location);
+
+  // Check if we got a 302 redirect
+  if (res.status === 302) {
+    console.log('✓ Got redirect to Keycloak login');
+  }
+}
+
+tests {
+  test("Should redirect to Keycloak", function() {
+    expect(res.status).to.equal(302);
+    expect(res.getHeader('location')).to.include('keycloak');
+    expect(res.getHeader('location')).to.include('authorize');
+  });
+}
+

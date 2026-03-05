@@ -14,7 +14,7 @@ Following the  [ports and adapter architecture](https://codesoapbox.dev/ports-ad
 - **details** (or infrastructure), for the implementation of driven ports (mainly data storage)
 - **app**, for the framework (spring boot here) 
 
-We also have an **apiTests** module for making E2E test at the network request level.
+We also have an **apiTests** module for making E2E test at the network request level. It is making use of **Karate** test lib.
 
 Inspiration taken from [this talk by steve pember](https://www.youtube.com/watch?v=mbNzUkNjrnA) and [the following](https://github.com/spember/spring-shoestore) github repo.
 The following additions have been made :
@@ -26,14 +26,17 @@ The following additions have been made :
 Driving ports (inbound ports) = what the application offers to the outside world    
 Driven ports (outbound ports) = what the application needs from the outside world 
 
-
 ## Building the app, executing tests , useful gradle commands
 
 The buildSrc project is used to share common gradle configuration across modules. 
-It can also be used to share common dependencies versions.  
-To build the whole project :
-`./gradlew clean build --refresh-dependencies --stacktrace` 
-To build only the core module : 
-`./gradlew :core:clean :core:build --refresh-dependencies --stacktrace`
-To get all the dependencies tree for the details module : 
-` ./gradlew details:dependencies --configuration testRuntimeClasspath`
+It can also be used to share common dependencies versions.   
+
+
+Build the whole project :    
+`./gradlew clean build --refresh-dependencies --stacktrace`  
+Generate an executable jar :
+
+To build only the core module :  
+`./gradlew :core:clean :core:build --refresh-dependencies --stacktrace`   
+To get the dependencies tree for the details module :   
+` ./gradlew details:dependencies --configuration testRuntimeClasspath` 

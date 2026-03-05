@@ -1,0 +1,47 @@
+meta {
+  name: 4. Exchange Authorization Code for Tokens
+  type: http
+  seq: 4
+}
+
+note {
+  This step happens server-to-server (backend to backend)
+  The BFF exchanges the authorization code for access and refresh tokens
+
+  The authorization code is short-lived and can only be used once
+  The tokens are stored securely on the BFF server
+}
+
+post {
+  url: {{keycloak_url}}/realms/{{keycloak_realm}}/protocol/openid-connect/token
+  body: formUrlEncoded {
+    grant_type: authorization_code
+    code: {{authorization_code}}
+    client_id: {{client_id}}
+    client_secret: {{client_secret}}
+    redirect_uri: {{redirect_uri}}
+  }
+}
+
+script:post-response {
+  // Parse the token response
+  if (res.status === 200) {
+    const body = res.getBody();
+    bru.setVar('access_token', body.access_token);
+    bru.setVar('refresh_token', body.refresh_token);
+    bru.setVar('token_type', body.token_type);
+    bru.setVar('expires_in', body.expires_in);
+    console.log('✓ Got access token:', body.access_token.substring(0, 20) + '...');
+    console.log('✓ Token expires in:', body.expires_in, 'seconds');
+  }
+}
+
+tests {
+  test("Should return access token", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property('access_token');
+    expect(res.body).to.have.property('refresh_token');
+    expect(res.body.token_type).to.equal('Bearer');
+  });
+}
+

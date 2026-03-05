@@ -1,0 +1,55 @@
+plugins {
+    id 'clean-architecture-java-spring.java-conventions'
+    id 'org.springframework.boot' version "4.0.1"
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+    implementation project(":core") // TODO : use modules.. only export module should be imported here !
+    implementation project(":app")
+    // TODO : find a way to group dependencies and avoid duplication
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
+    testImplementation 'io.jsonwebtoken:jjwt-api:0.11.1'
+    testRuntimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.1'
+    testRuntimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.1'
+
+    testImplementation 'com.intuit.karate:karate-junit5:1.4.1'
+    testImplementation "com.intuit.karate:karate-apache:0.9.6"
+
+    testImplementation "com.intuit.karate:karate-apache:0.9.6"
+}
+
+bootJar {
+    enabled = false
+}
+
+test {
+    useJUnitPlatform()
+
+    systemProperty "karate.options", System.properties.getProperty("karate.options")
+    systemProperty "karate.env", System.properties.getProperty("karate.env")
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = true
+    maxHeapSize = '1G'
+
+    testLogging {
+        events "passed"
+    }
+}
+// Necessary because Karate puts features files in src/test/java instead of resources folder
+sourceSets {
+    test {
+        resources {
+            srcDir file('src/test/java')
+            exclude '**/*.java'
+        }
+    }
+}

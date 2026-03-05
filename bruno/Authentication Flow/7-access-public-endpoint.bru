@@ -1,0 +1,27 @@
+meta {
+  name: 7. Access Public Endpoint (No Auth Required)
+  type: http
+  seq: 7
+}
+
+note {
+  Some endpoints don't require authentication
+  These are accessible without tokens or credentials
+
+  Example: /users and /scores endpoints are configured as public
+}
+
+get {
+  url: {{bff_url}}/scores
+}
+
+tests {
+  test("Should access public endpoint without auth", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("Should not require Authorization header", function() {
+    expect(req.getHeader('Authorization')).to.be.null;
+  });
+}
+

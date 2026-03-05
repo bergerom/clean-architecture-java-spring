@@ -1,0 +1,39 @@
+meta {
+  name: 3. Keycloak User Login (Manual Step)
+  type: http
+  seq: 3
+}
+
+note {
+  In a real browser-based flow:
+
+  1. User navigates to Keycloak login page
+  2. User enters username: admin
+  3. User enters password: admin
+  4. User submits the form
+  5. Keycloak validates credentials
+  6. If valid, Keycloak redirects back to redirect_uri with:
+     - authorization code
+     - state parameter
+
+  In Bruno, we can't automate the browser login, so this is a manual step.
+
+  MANUAL STEPS:
+  1. Open browser and navigate to:
+     {{keycloak_url}}/realms/{{keycloak_realm}}/protocol/openid-connect/auth?
+       client_id={{client_id}}&
+       response_type=code&
+       redirect_uri={{redirect_uri}}&
+       state={{state}}&
+       scope=openid profile email offline_access
+
+  2. Login with:
+     Username: {{username}}
+     Password: {{password}}
+
+  3. You'll be redirected to a URL like:
+     {{redirect_uri}}?code=XXXXXX&state={{state}}
+
+  4. Copy the authorization code from the URL and paste it in the next request
+}
+

@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.0
+    container_name: keycloak
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KC_HEALTH_ENABLED: "true"
+      KC_DB: dev-file
+      # Use the docker service hostname so Keycloak publishes the same issuer when discovered from other containers
+      KC_HOSTNAME: keycloak
+      # Allow non-strict hostname handling in development so requests from different hostnames are accepted
+      KC_HOSTNAME_STRICT: "false"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro
+    ports:
+      - "8081:8080"
+    networks:
+      - app-net
+    healthcheck:
+      test: [ "CMD-SHELL", "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000" ]
+      interval: 5s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  spring-app:
+    build:
+      context: clean-archi
+    container_name: spring-bff
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker #TODO : create profile in Spring config
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/my-realm
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_REDIRECT_URI: http://spring-app:8080/login/oauth2/code/keycloak
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_ID: bff-client
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET: bff-secret
+    volumes:
+      # Mount docker-specific application file so container uses correct issuer/redirect defaults
+      - ./app/src/main/resources/application-docker.yml:/config/application.yml
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
