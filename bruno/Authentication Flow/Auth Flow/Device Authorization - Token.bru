@@ -1,0 +1,29 @@
+meta {
+  name: Device Authorization - Token
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{keycloak_url}}/realms/{{keycloak_realm}}/protocol/openid-connect/token
+  body: formUrlEncoded
+  auth: inherit
+}
+
+params:query {
+  : 
+}
+
+body:form-urlencoded {
+  grant_type: urn:ietf:params:oauth:grant-type:device_code
+  client_id: bff-client
+  client_secret: bff-secret
+  code: Tic4ica8EdEWEYQCiClkyzUfSzQjmpZPJ7WvHzoc2jc
+  device_code: hQHYWPDVTnW3XdeHnhpsK3bexDyXP1yre4YfmAyx-X0
+  scope: offline-access
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -7,20 +7,37 @@ services:
     container_name: keycloak
     command:
       - start-dev
+      - -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
       - --import-realm
     environment:
       KC_HEALTH_ENABLED: "true"
       KC_DB: dev-file
-      # Use the docker service hostname so Keycloak publishes the same issuer when discovered from other containers
+      # Fix hostname to match how we access it
       KC_HOSTNAME: keycloak
-      # Allow non-strict hostname handling in development so requests from different hostnames are accepted
+      # Remove strict hostname checking for development
       KC_HOSTNAME_STRICT: "false"
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_LOG_LEVEL: INFO
+      KC_HTTP_ENABLED: "true"
+
+      ##############################
+      # Uncomment for production ready
+      # KEYCLOAK_PRODUCTION: "true"
+      # KC_PROXY_HEADERS: "xforwarded"
+      # KC_PROXY: "edge"
+      # Disable SSL for development
+      ##############################
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro
+      # Remove SSL certificates for now to avoid issues
+      # - ./keycloak/server.crt.pem:/opt/keycloak/conf/server.crt.pem
+      # - ./keycloak/server.key.pem:/opt/keycloak/conf/server.key.pem
     ports:
       - "8081:8080"
+      - "9000:9000"
+      # Remove HTTPS port for development
+      # - "8443:8443"
     networks:
       - app-net
     healthcheck:
@@ -38,14 +55,16 @@ services:
       keycloak:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: docker #TODO : create profile in Spring config
+      SPRING_PROFILES_ACTIVE: docker
+      # This tells Spring to look for application.yml in /config directory (mounted from host)
+      SPRING_CONFIG_LOCATION: file:/config/
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/my-realm
-      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_REDIRECT_URI: http://spring-app:8080/login/oauth2/code/keycloak
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT_URI: http://spring-app:8080/login/oauth2/code/keycloak
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_ID: bff-client
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET: bff-secret
     volumes:
-      # Mount docker-specific application file so container uses correct issuer/redirect defaults
-      - ./app/src/main/resources/application-docker.yml:/config/application.yml
+      # Mount the application config file from host so changes are reflected without rebuild
+      - ./clean-archi/app/src/main/resources/application-docker.yml:/config/application.yml
     ports:
       - "8080:8080"
     networks:

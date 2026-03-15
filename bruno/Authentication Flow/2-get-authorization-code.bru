@@ -26,6 +26,8 @@ get {
     scope: openid profile email offline_access
 }
 
+ssl-verification: false
+
 tests {
   test("Should show login page or redirect", function() {
     // In real flow, this would return HTML with login form

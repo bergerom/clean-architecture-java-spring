@@ -5,20 +5,25 @@ spring:
     oauth2:
       client:
         provider:
-          keycloak-my-realm:
+          keycloak:
             # Use the keycloak service name from docker-compose so discovery returns the same issuer
             issuer-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI:http://keycloak:8080/realms/my-realm}
         registration:
           keycloak:
-            provider: keycloak-my-realm
+            provider: keycloak
             client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_ID:bff-client}
             # allow secret override from env (set in docker-compose)
-            client-secret: ${KEYCLOAK_CLIENT_SECRET:bff-secret}
+            client-secret: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET:bff-secret}
             client-name: Testapp
             authorization-grant-type: authorization_code
             # Redirect to the spring-app service inside the docker network
-            redirect-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_REDIRECT_URI:http://spring-app:8080/login/oauth2/code/keycloak}
+            redirect-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT_URI:http://spring-app:8080/login/oauth2/code/keycloak}
             scope: openid,profile,email,offline_access
+
+app:
+  security:
+    oauth2:
+      enabled: true
 
 server:
   # Run on the same port the docker-compose maps (keep 8080)
@@ -27,13 +32,34 @@ server:
 logging:
   level:
     root: INFO
+    # Spring Framework
+    org.springframework: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.boot.web.servlet.ServletContextInitializerBeans: INFO
+    # Tomcat/Servlet
+    org.apache.catalina: INFO
+    org.apache.tomcat: DEBUG
+    # Your application
+    app: DEBUG
     com.example: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/spring-app.log
+    max-size: 10MB
+    max-history: 10
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,loggers
+  endpoint:
+    loggers:
+      enabled: true
 
 # Activate this file by setting SPRING_PROFILES_ACTIVE=docker (already set in docker-compose.yml)
 # Notes:

@@ -1,4 +1,4 @@
-# Full login flow
+# Full login flow - Authorization code flow
 
 ### User tries to access resource under /private uri
 ```declarative

@@ -22,6 +22,8 @@ post {
   }
 }
 
+ssl-verification: false
+
 script:post-response {
   if (res.status === 200) {
     const body = res.getBody();

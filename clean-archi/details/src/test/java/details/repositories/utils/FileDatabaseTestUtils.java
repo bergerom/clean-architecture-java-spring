@@ -4,14 +4,11 @@ import core.entities.GameScore;
 import core.entities.User;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.Optional;
 
 public class FileDatabaseTestUtils {
     private final Class<?> callingClass;

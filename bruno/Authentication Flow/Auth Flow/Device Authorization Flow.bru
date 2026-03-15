@@ -1,0 +1,25 @@
+meta {
+  name: Device Authorization Flow
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{keycloak_url}}/realms/{{keycloak_realm}}/protocol/openid-connect/auth/device
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  client_id: bff-client
+  scope: openid profile email offline_access
+  redirect_uri: http://spring-app:8080/login/oauth2/code/keycloak
+  state: Zi8TSq84yB0NzF-szPzjsqJeodguZPlTkMdajFU8IGA%3D
+  response_type: code
+  client_secret: bff-secret
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -23,6 +23,8 @@ post {
   }
 }
 
+ssl-verification: false
+
 script:post-response {
   // Parse the token response
   if (res.status === 200) {
