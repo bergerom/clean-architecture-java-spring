@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "name": "Clean Architecture",
+  "uid": "clean-arch",
+  "type": "collection",
+  "environments": [],
+  "brunoConfig": {
+    "scripts": {
+      "preRequest": "",
+      "postResponse": ""
+    }
+  }
+}
+

@@ -1,7 +1,7 @@
 Feature: Create user
   Background:
 * url baseUrl
-* def users = '/users/'
+* def users = '/admin/users/'
 
 Scenario: Create an user
 

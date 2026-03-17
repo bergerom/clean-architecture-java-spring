@@ -23,16 +23,6 @@ public class ClientAPI {
         this.useCaseInteractor = useCaseInteractor;
     }
 
-    @PostMapping("/users")
-    public CreateUserDTO createUser(@RequestBody CreateUserContainer createUser) {
-        CreateUser.CreateUserRequest createUserRequest
-                = new CreateUser.CreateUserRequest(createUser.userName(), createUser.age());
-
-        String userId =  useCaseInteractor.createUser(createUserRequest).id();
-
-        return new CreateUserDTO(userId);
-    }
-
     @GetMapping("/users")
     public List<User> listUsers(@RequestBody Optional<String> nameContains) {
         ListUsers.ListUserRequest listUserRequest

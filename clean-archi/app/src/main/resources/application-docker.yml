@@ -8,18 +8,6 @@ spring:
           keycloak:
             # Use the keycloak service name from docker-compose so discovery returns the same issuer
             issuer-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI:http://keycloak:8080/realms/my-realm}
-        registration:
-          keycloak:
-            provider: keycloak
-            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_ID:bff-client}
-            # allow secret override from env (set in docker-compose)
-            client-secret: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET:bff-secret}
-            client-name: Testapp
-            authorization-grant-type: authorization_code
-            # Redirect to the spring-app service inside the docker network
-            redirect-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT_URI:http://spring-app:8080/login/oauth2/code/keycloak}
-            scope: openid,profile,email,offline_access
-
 app:
   security:
     oauth2:

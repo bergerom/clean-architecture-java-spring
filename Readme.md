@@ -31,12 +31,11 @@ Driven ports (outbound ports) = what the application needs from the outside worl
 The buildSrc project is used to share common gradle configuration across modules. 
 It can also be used to share common dependencies versions.   
 
-
 Build the whole project :    
-`./gradlew clean build --refresh-dependencies --stacktrace`  
+`./gradlew -p clean-archi clean build --refresh-dependencies --stacktrace`  
 Generate an executable jar :
 
 To build only the core module :  
-`./gradlew :core:clean :core:build --refresh-dependencies --stacktrace`   
+`./gradlew -p clean-archi :core:clean :core:build --refresh-dependencies --stacktrace`   
 To get the dependencies tree for the details module :   
-` ./gradlew details:dependencies --configuration testRuntimeClasspath` 
+` ./gradlew -p clean-archi details:dependencies --configuration testRuntimeClasspath` 

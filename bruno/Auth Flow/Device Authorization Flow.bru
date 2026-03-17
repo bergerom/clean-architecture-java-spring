@@ -19,6 +19,11 @@ body:form-urlencoded {
   client_secret: bff-secret
 }
 
+script:post-response {
+  bru.setVar("code", res.body.user_code);
+  bru.setVar("device_code", res.body.device_code);
+}
+
 settings {
   encodeUrl: true
   timeout: 0

@@ -18,9 +18,15 @@ body:form-urlencoded {
   grant_type: urn:ietf:params:oauth:grant-type:device_code
   client_id: bff-client
   client_secret: bff-secret
-  code: Tic4ica8EdEWEYQCiClkyzUfSzQjmpZPJ7WvHzoc2jc
-  device_code: hQHYWPDVTnW3XdeHnhpsK3bexDyXP1yre4YfmAyx-X0
+  code: {{code}}
+  device_code: {{device_code}}
   scope: offline-access
+}
+
+script:post-response {
+  bru.setVar("access_token",res.body.access_token);
+  bru.setVar("refresh_token",res.body.refresh_token);
+  bru.setVar("id_token",res.body.id_token);
 }
 
 settings {
